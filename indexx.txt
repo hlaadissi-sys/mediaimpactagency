@@ -1,0 +1,924 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Impact Marketing Agency - Real Estate Marketing Experts</title>
+  
+  <!-- Fonts -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;700&family=Tajawal:wght@400;500;700;800&display=swap" rel="stylesheet">
+  
+  <!-- Tailwind CSS -->
+  <script src="https://cdn.tailwindcss.com"></script>
+  <script>
+    tailwind.config = {
+      darkMode: 'class',
+      theme: {
+        extend: {
+          fontFamily: {
+            inter: ['Inter', 'sans-serif'],
+            tajawal: ['Tajawal', 'sans-serif'],
+          },
+          colors: {
+            orange: {
+              50: '#fff7ed',
+              100: '#ffedd5',
+              200: '#fed7aa',
+              300: '#fdba74',
+              400: '#fb923c',
+              500: '#f97316',
+              600: '#ea580c',
+              700: '#c2410c',
+              800: '#9a3412',
+              900: '#7c2d12',
+            }
+          }
+        }
+      }
+    }
+  </script>
+
+  <!-- React & Libraries -->
+  <script crossorigin src="https://unpkg.com/react@18/umd/react.production.min.js"></script>
+  <script crossorigin src="https://unpkg.com/react-dom@18/umd/react-dom.production.min.js"></script>
+  <script src="https://unpkg.com/@babel/standalone/babel.min.js"></script>
+  <script src="https://unpkg.com/framer-motion@10.16.4/dist/framer-motion.js"></script>
+
+  <style>
+    /* Custom scrollbar */
+    ::-webkit-scrollbar { width: 10px; }
+    ::-webkit-scrollbar-track { background: #1a1a1a; }
+    ::-webkit-scrollbar-thumb { background: #ea580c; border-radius: 5px; }
+    ::-webkit-scrollbar-thumb:hover { background: #c2410c; }
+    
+    html { scroll-behavior: smooth; }
+  </style>
+<script type="importmap">
+{
+  "imports": {
+    "react": "https://aistudiocdn.com/react@^19.2.0",
+    "react-dom/": "https://aistudiocdn.com/react-dom@^19.2.0/",
+    "react/": "https://aistudiocdn.com/react@^19.2.0/",
+    "lucide-react": "https://aistudiocdn.com/lucide-react@^0.554.0",
+    "framer-motion": "https://aistudiocdn.com/framer-motion@^12.23.24"
+  }
+}
+</script>
+</head>
+<body class="bg-slate-50 text-slate-900">
+  <div id="root"></div>
+
+  <script type="text/babel">
+    const { useState, useEffect } = React;
+    const { motion, AnimatePresence } = window.Motion;
+
+    // --- Translations ---
+    const TRANSLATIONS = {
+      ar: {
+        nav: {
+          home: 'الرئيسية',
+          services: 'خدماتنا',
+          results: 'قصص نجاح',
+          faq: 'الأسئلة الشائعة',
+          contact: 'تواصل معنا',
+          toggleLang: 'Français',
+        },
+        hero: {
+          title: 'الوكالة الرائدة في التسويق العقاري الرقمي',
+          subtitle: 'نحول مشاريعك العقارية إلى نجاحات استثنائية عبر استراتيجيات رقمية متقدمة ومنصات متخصصة.',
+          cta: 'احجز استشارتك المجانية',
+        },
+        stats: [
+          { value: '200+', label: 'مشروع عقاري ناجح' },
+          { value: '350%', label: 'زيادة في الاستفسارات' },
+          { value: '50M+', label: 'درهم مبيعات عقارية' },
+          { value: '95%', label: 'معدل رضا المطورين' },
+        ],
+        services: {
+          title: 'خدماتنا العقارية المتخصصة',
+          subtitle: 'حلول تسويقية متكاملة مصممة خصيصاً لقطاع العقارات لتحقيق أعلى معدلات البيع والتأجير',
+          items: [
+            { title: 'تسويق المشاريع السكنية', description: 'حملات رقمية متكاملة لتسويق المجمعات السكنية والأبراج مع استهداف المشترين المحتملين بدقة.' },
+            { title: 'العقارات التجارية', description: 'استراتيجيات متخصصة لتسويق المحلات التجارية، المكاتب والمساحات الاستثمارية.' },
+            { title: 'إدارة التأجير', description: 'حملات مستهدفة لزيادة معدلات الإشغال وجذب المستأجرين المثاليين.' },
+            { title: 'إنتاج المحتوى العقاري', description: 'إنتاج فيديوهات احترافية، جولات افتراضية وصور عالية الجودة للعقارات.' },
+            { title: 'تحليل السوق العقاري', description: 'دراسات تحليلية معمقة للسوق وتحديد أفضل الاستراتيجيات التسويقية.' },
+            { title: 'توليد العملاء المحتملين', description: 'أنظمة متطورة لجذب وتأهيل المشترين والمستثمرين الجادين.' },
+          ],
+        },
+        testimonials: {
+          title: 'شهادات شركائنا',
+          subtitle: 'اكتشف كيف ساعدنا شركات التطوير العقاري في تحقيق أهدافها البيعية',
+          items: [
+            {
+              text: 'بفضل Impact Marketing Agency، تمكنا من بيع 80% من وحدات مشروعنا خلال 4 أشهر فقط. فريق محترف ونتائج مذهلة.',
+              author: 'محمد السعيد',
+              role: 'مدير تطوير عقاري',
+              initials: 'م.س'
+            },
+            {
+              text: 'زادت الاستفسارات العقارية لدينا بنسبة 400% وانخفضت تكلفة الحصول على العميل بنسبة 60%. أفضل استثمار تسويقي قمنا به.',
+              author: 'أحمد حسن',
+              role: 'مستثمر عقاري',
+              initials: 'أ.ح'
+            },
+            {
+              text: 'خبرتهم في السوق العقاري واضحة. استراتيجياتهم التسويقية ساعدتنا في تسريع مبيعات مشروعنا الفاخر.',
+              author: 'ليلى العتيبي',
+              role: 'مديرة تسويق',
+              initials: 'ل.ع'
+            }
+          ]
+        },
+        caseStudies: {
+          title: 'مشاريع عقارية ناجحة',
+          subtitle: 'أمثلة واقعية من حملاتنا التسويقية العقارية الناجحة',
+          items: [
+            {
+              title: 'برج سكني فاخر - الدار البيضاء',
+              description: 'حملة متكاملة لتسويق برج سكني من 150 وحدة.',
+              results: [
+                { label: 'نسبة البيع', value: '85%' },
+                { label: 'استفسار مؤهل', value: '2000+' },
+                { label: 'عائد الاستثمار', value: '18x' },
+              ]
+            },
+            {
+              title: 'مجمع فلل - مراكش',
+              description: 'استراتيجية تسويقية لمجمع من 80 فيلا فاخرة.',
+              results: [
+                { label: 'مبيع خلال 6 أشهر', value: '70%' },
+                { label: 'زيارة ميدانية', value: '1500+' },
+                { label: 'عائد الاستثمار', value: '22x' },
+              ]
+            },
+            {
+              title: 'مركز تجاري - الرباط',
+              description: 'حملة لتأجير محلات تجارية في مركز جديد.',
+              results: [
+                { label: 'نسبة الإشغال', value: '95%' },
+                { label: 'طلب تأجير', value: '800+' },
+                { label: 'عائد الاستثمار', value: '15x' },
+              ]
+            }
+          ]
+        },
+        faq: {
+          title: 'الأسئلة الشائعة',
+          subtitle: 'إجابات على أكثر الأسئلة شيوعاً حول خدماتنا',
+          items: [
+            { question: 'ما هي تكلفة خدماتكم التسويقية؟', answer: 'تبدأ باقاتنا من 5,000 درهم شهرياً وتختلف حسب حجم المشروع وأهدافك.' },
+            { question: 'كم من الوقت حتى نرى النتائج؟', answer: 'عادة ما تبدأ الاستفسارات المؤهلة في الوصول خلال 7-14 يوماً من إطلاق الحملة.' },
+            { question: 'هل تغطون جميع مدن المغرب؟', answer: 'نعم، نعمل مع مشاريع في جميع المدن المغربية.' },
+            { question: 'هل تقدمون ضمان على النتائج؟', answer: 'نلتزم بتحقيق معايير أداء محددة للاستفسارات والزيارات.' },
+          ]
+        },
+        contact: {
+          title: 'ابدأ مشروعك العقاري معنا',
+          subtitle: 'احجز استشارة مجانية واكتشف كيف يمكننا مضاعفة مبيعاتك العقارية',
+          success: 'شكراً لك! تم استلام طلبك وسنتواصل معك قريباً.',
+          error: 'عذراً، حدث خطأ أثناء إرسال الطلب. يرجى المحاولة مرة أخرى أو الاتصال بنا مباشرة.',
+          form: {
+            name: 'الاسم الكامل',
+            email: 'البريد الإلكتروني',
+            phone: 'رقم الهاتف',
+            projectType: 'نوع المشروع العقاري',
+            budget: 'الميزانية التسويقية الشهرية',
+            message: 'تفاصيل المشروع',
+            submit: 'أرسل الطلب',
+            submitting: 'جاري الإرسال...',
+            placeholders: {
+              selectProject: 'اختر نوع المشروع',
+              selectBudget: 'اختر الميزانية',
+              message: 'أخبرنا عن مشروعك، الموقع، عدد الوحدات، والأهداف البيعية...',
+            },
+            options: {
+              residential: 'سكني',
+              commercial: 'تجاري',
+              villa: 'فلل',
+              apartment: 'شقق',
+              office: 'مكاتب',
+              mixed: 'مختلط',
+              other: 'أخرى',
+            }
+          }
+        },
+        footer: {
+          description: 'وكالة التسويق الرقمي العقاري الرائدة في المغرب.',
+          rights: '© 2025 Impact Marketing Agency. جميع الحقوق محفوظة.',
+        }
+      },
+      fr: {
+        nav: {
+          home: 'Accueil',
+          services: 'Services',
+          results: 'Résultats',
+          faq: 'FAQ',
+          contact: 'Contact',
+          toggleLang: 'العربية',
+        },
+        hero: {
+          title: 'L\'Agence Leader en Marketing Digital Immobilier',
+          subtitle: 'Nous transformons vos projets immobiliers en succès exceptionnels via des stratégies digitales avancées.',
+          cta: 'Réservez votre consultation',
+        },
+        stats: [
+          { value: '200+', label: 'Projets Réussis' },
+          { value: '350%', label: 'Augmentation des Leads' },
+          { value: '50M+', label: 'Dirhams de Ventes' },
+          { value: '95%', label: 'Satisfaction Clients' },
+        ],
+        services: {
+          title: 'Nos Services Spécialisés',
+          subtitle: 'Solutions marketing complètes conçues spécifiquement pour le secteur immobilier',
+          items: [
+            { title: 'Marketing Résidentiel', description: 'Campagnes digitales complètes pour complexes résidentiels et tours avec ciblage précis.' },
+            { title: 'Immobilier Commercial', description: 'Stratégies spécialisées pour commerces, bureaux et espaces d\'investissement.' },
+            { title: 'Gestion Locative', description: 'Campagnes ciblées pour augmenter les taux d\'occupation et attirer les meilleurs locataires.' },
+            { title: 'Contenu Immobilier', description: 'Production de vidéos professionnelles, visites virtuelles et photos haute qualité.' },
+            { title: 'Analyse de Marché', description: 'Études analytiques approfondies du marché pour définir les meilleures stratégies.' },
+            { title: 'Génération de Leads', description: 'Systèmes avancés pour attirer et qualifier les acheteurs et investisseurs sérieux.' },
+          ],
+        },
+        testimonials: {
+          title: 'Témoignages Clients',
+          subtitle: 'Découvrez comment nous avons aidé les promoteurs à atteindre leurs objectifs',
+          items: [
+            {
+              text: 'Grâce à Impact Marketing Agency, nous avons vendu 80% de nos unités en 4 mois. Une équipe professionnelle.',
+              author: 'Mohamed Said',
+              role: 'Directeur Développement',
+              initials: 'M.S'
+            },
+            {
+              text: 'Nos demandes qualifiées ont augmenté de 400% et le coût par lead a baissé de 60%. Le meilleur investissement.',
+              author: 'Ahmed Hassan',
+              role: 'Investisseur Immobilier',
+              initials: 'A.H'
+            },
+            {
+              text: 'Leur expertise du marché immobilier est évidente. Leurs stratégies ont accéléré nos ventes de luxe.',
+              author: 'Laila Al Otaibi',
+              role: 'Directrice Marketing',
+              initials: 'L.O'
+            }
+          ]
+        },
+        caseStudies: {
+          title: 'Projets Réussis',
+          subtitle: 'Exemples concrets de nos campagnes marketing immobilières réussies',
+          items: [
+            {
+              title: 'Tour Résidentielle Luxe - Casablanca',
+              description: 'Campagne complète pour commercialiser une tour de 150 unités.',
+              results: [
+                { label: 'Taux de vente', value: '85%' },
+                { label: 'Leads qualifiés', value: '2000+' },
+                { label: 'ROI', value: '18x' },
+              ]
+            },
+            {
+              title: 'Complexe de Villas - Marrakech',
+              description: 'Stratégie marketing pour un complexe de 80 villas de luxe.',
+              results: [
+                { label: 'Vendu en 6 mois', value: '70%' },
+                { label: 'Visites sur site', value: '1500+' },
+                { label: 'ROI', value: '22x' },
+              ]
+            },
+            {
+              title: 'Centre Commercial - Rabat',
+              description: 'Campagne de location de boutiques dans un nouveau centre.',
+              results: [
+                { label: 'Taux d\'occupation', value: '95%' },
+                { label: 'Demandes location', value: '800+' },
+                { label: 'ROI', value: '15x' },
+              ]
+            }
+          ]
+        },
+        faq: {
+          title: 'Questions Fréquentes',
+          subtitle: 'Réponses aux questions les plus courantes',
+          items: [
+            { question: 'Quel est le coût de vos services ?', answer: 'Nos forfaits commencent à 5 000 DH/mois et varient selon le projet.' },
+            { question: 'Quand verrons-nous des résultats ?', answer: 'Les leads qualifiés arrivent généralement sous 7 à 14 jours.' },
+            { question: 'Couvrez-vous tout le Maroc ?', answer: 'Oui, nous travaillons avec des projets dans toutes les villes marocaines.' },
+            { question: 'Y a-t-il une garantie ?', answer: 'Nous nous engageons sur des indicateurs de performance précis.' },
+          ]
+        },
+        contact: {
+          title: 'Démarrez Votre Projet',
+          subtitle: 'Réservez une consultation gratuite pour multiplier vos ventes',
+          success: 'Merci ! Votre demande a été reçue. Nous vous contacterons bientôt.',
+          error: 'Désolé, une erreur s\'est produite. Veuillez réessayer ou nous appeler directement.',
+          form: {
+            name: 'Nom Complet',
+            email: 'Email Professionnel',
+            phone: 'Numéro de Téléphone',
+            projectType: 'Type de Projet',
+            budget: 'Budget Marketing Mensuel',
+            message: 'Détails du Projet',
+            submit: 'Envoyer la Demande',
+            submitting: 'Envoi en cours...',
+            placeholders: {
+              selectProject: 'Choisir le type',
+              selectBudget: 'Choisir le budget',
+              message: 'Parlez-nous de votre projet, localisation, nombre d\'unités...',
+            },
+            options: {
+              residential: 'Résidentiel',
+              commercial: 'Commercial',
+              villa: 'Villas',
+              apartment: 'Appartements',
+              office: 'Bureaux',
+              mixed: 'Mixte',
+              other: 'Autre',
+            }
+          }
+        },
+        footer: {
+          description: 'L\'agence de marketing digital immobilier leader au Maroc.',
+          rights: '© 2025 Impact Marketing Agency. Tous droits réservés.',
+        }
+      }
+    };
+
+    // --- Icons ---
+    const Icon = ({ children, className, size = 24, ...props }) => (
+      <svg xmlns="http://www.w3.org/2000/svg" width={size} height={size} viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className={className} {...props}>
+        {children}
+      </svg>
+    );
+
+    const Icons = {
+      Building2: (p) => <Icon {...p}><path d="M6 22V4a2 2 0 0 1 2-2h8a2 2 0 0 1 2 2v18Z"/><path d="M6 12H4a2 2 0 0 0-2 2v6a2 2 0 0 0 2 2h2"/><path d="M18 9h2a2 2 0 0 1 2 2v9a2 2 0 0 1-2 2h-2"/><path d="M10 6h4"/><path d="M10 10h4"/><path d="M10 14h4"/><path d="M10 18h4"/></Icon>,
+      Store: (p) => <Icon {...p}><path d="m2 7 4.41-4.41A2 2 0 0 1 7.83 2h8.34a2 2 0 0 1 1.42.59L22 7"/><path d="M4 12v8a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2v-8"/><path d="M15 22v-4a2 2 0 0 0-2-2h-2a2 2 0 0 0-2 2v4"/><path d="M2 7h20"/><path d="M22 7v3a2 2 0 0 1-2 2v0a2.7 2.7 0 0 1-1.59-.63.7.7 0 0 0-.82 0A2.7 2.7 0 0 1 16 12a2.7 2.7 0 0 1-1.59-.63.7.7 0 0 0-.82 0A2.7 2.7 0 0 1 12 12a2.7 2.7 0 0 1-1.59-.63.7.7 0 0 0-.82 0A2.7 2.7 0 0 1 8 12a2.7 2.7 0 0 1-1.59-.63.7.7 0 0 0-.82 0A2.7 2.7 0 0 1 4 12v0a2 2 0 0 1-2-2V7"/></Icon>,
+      Key: (p) => <Icon {...p}><circle cx="7.5" cy="15.5" r="5.5"/><path d="m21 2-9.6 9.6"/><path d="m15.5 7.5 3 3L22 7l-3-3"/></Icon>,
+      Video: (p) => <Icon {...p}><path d="m22 8-6 4 6 4V8Z"/><rect x="2" y="6" width="14" height="12" rx="2" ry="2"/></Icon>,
+      TrendingUp: (p) => <Icon {...p}><polyline points="23 6 13.5 15.5 8.5 10.5 1 18"/><polyline points="17 6 23 6 23 12"/></Icon>,
+      Target: (p) => <Icon {...p}><circle cx="12" cy="12" r="10"/><circle cx="12" cy="12" r="6"/><circle cx="12" cy="12" r="2"/></Icon>,
+      Menu: (p) => <Icon {...p}><line x1="4" x2="20" y1="12" y2="12"/><line x1="4" x2="20" y1="6" y2="6"/><line x1="4" x2="20" y1="18" y2="18"/></Icon>,
+      X: (p) => <Icon {...p}><path d="M18 6 6 18"/><path d="m6 6 12 12"/></Icon>,
+      Globe: (p) => <Icon {...p}><circle cx="12" cy="12" r="10"/><path d="M12 2a15.3 15.3 0 0 1 4 10 15.3 15.3 0 0 1-4 10 15.3 15.3 0 0 1-4-10 15.3 15.3 0 0 1 4-10z"/><path d="M2 12h20"/></Icon>,
+      ChevronDown: (p) => <Icon {...p}><path d="m6 9 6 6 6-6"/></Icon>,
+      Facebook: (p) => <Icon {...p}><path d="M18 2h-3a5 5 0 0 0-5 5v3H7v4h3v8h4v-8h3l1-4h-4V7a1 1 0 0 1 1-1h3z"/></Icon>,
+      Instagram: (p) => <Icon {...p}><rect width="20" height="20" x="2" y="2" rx="5" ry="5"/><path d="M16 11.37A4 4 0 1 1 12.63 8 4 4 0 0 1 16 11.37z"/><line x1="17.5" x2="17.51" y1="6.5" y2="6.5"/></Icon>,
+      Linkedin: (p) => <Icon {...p}><path d="M16 8a6 6 0 0 1 6 6v7h-4v-7a2 2 0 0 0-2-2 2 2 0 0 0-2 2v7h-4v-7a6 6 0 0 1 6-6z"/><rect width="4" height="12" x="2" y="9"/><circle cx="4" cy="4" r="2"/></Icon>,
+      Twitter: (p) => <Icon {...p}><path d="M22 4s-.7 2.1-2 3.4c1.6 10-9.4 17.3-18 11.6 2.2.1 4.4-.6 6-2C3 15.5.5 9.6 3 5c2.2 2.6 5.6 4.1 9 4-.9-4.2 4-6.6 7-3.8 1.1 0 3-1.2 3-1.2z"/></Icon>,
+      CheckCircle: (p) => <Icon {...p}><path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"/><polyline points="22 4 12 14.01 9 11.01"/></Icon>,
+    };
+
+    // --- Components ---
+
+    const Navbar = ({ lang, setLang, content }) => {
+      const [isOpen, setIsOpen] = useState(false);
+      const [scrolled, setScrolled] = useState(false);
+
+      useEffect(() => {
+        const handleScroll = () => setScrolled(window.scrollY > 20);
+        window.addEventListener('scroll', handleScroll);
+        return () => window.removeEventListener('scroll', handleScroll);
+      }, []);
+
+      const navLinks = [
+        { href: "#services", label: content.services },
+        { href: "#results", label: content.results },
+        { href: "#faq", label: content.faq },
+        { href: "#contact", label: content.contact },
+      ];
+
+      return (
+        <nav className={`fixed top-0 w-full z-50 transition-all duration-300 ${scrolled ? 'bg-slate-900/95 backdrop-blur-md shadow-lg py-2' : 'bg-transparent py-4'}`}>
+          <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div className="flex justify-between items-center h-16">
+              {/* Logo */}
+              <div className="flex-shrink-0 flex items-center cursor-pointer" onClick={() => window.scrollTo(0,0)}>
+                <span className="text-2xl font-bold text-white">Impact</span>
+                <span className="text-2xl font-bold text-orange-500">Agency</span>
+              </div>
+
+              {/* Desktop Nav */}
+              <div className="hidden md:flex items-center space-x-8 rtl:space-x-reverse">
+                {navLinks.map((link) => (
+                  <a 
+                    key={link.href} 
+                    href={link.href} 
+                    className="text-gray-300 hover:text-orange-500 transition-colors font-medium text-sm"
+                  >
+                    {link.label}
+                  </a>
+                ))}
+                <button 
+                  onClick={() => setLang(lang === 'ar' ? 'fr' : 'ar')}
+                  className="flex items-center space-x-2 rtl:space-x-reverse bg-orange-600 hover:bg-orange-700 text-white px-4 py-2 rounded-full transition-all text-sm font-bold"
+                >
+                  <Icons.Globe size={16} />
+                  <span>{content.toggleLang}</span>
+                </button>
+              </div>
+
+              {/* Mobile Menu Button */}
+              <div className="md:hidden">
+                <button onClick={() => setIsOpen(!isOpen)} className="text-white hover:text-orange-500">
+                  {isOpen ? <Icons.X size={28} /> : <Icons.Menu size={28} />}
+                </button>
+              </div>
+            </div>
+          </div>
+
+          {/* Mobile Menu */}
+          <AnimatePresence>
+            {isOpen && (
+              <motion.div 
+                initial={{ opacity: 0, height: 0 }}
+                animate={{ opacity: 1, height: 'auto' }}
+                exit={{ opacity: 0, height: 0 }}
+                className="md:hidden bg-slate-900 border-t border-slate-800"
+              >
+                <div className="px-4 pt-2 pb-6 space-y-2">
+                  {navLinks.map((link) => (
+                    <a 
+                      key={link.href} 
+                      href={link.href}
+                      onClick={() => setIsOpen(false)}
+                      className="block px-3 py-3 text-base font-medium text-white hover:bg-slate-800 rounded-md hover:text-orange-500"
+                    >
+                      {link.label}
+                    </a>
+                  ))}
+                  <button 
+                    onClick={() => {
+                      setLang(lang === 'ar' ? 'fr' : 'ar');
+                      setIsOpen(false);
+                    }}
+                    className="w-full text-start px-3 py-3 text-base font-medium text-orange-500 hover:bg-slate-800 rounded-md"
+                  >
+                    {content.toggleLang}
+                  </button>
+                </div>
+              </motion.div>
+            )}
+          </AnimatePresence>
+        </nav>
+      );
+    };
+
+    const Hero = ({ content, lang }) => (
+      <section className="relative min-h-screen flex items-center justify-center overflow-hidden">
+        <div className="absolute inset-0 z-0">
+          <img 
+            src="https://images.unsplash.com/photo-1486406146926-c627a92ad1ab?ixlib=rb-1.2.1&auto=format&fit=crop&w=1920&q=80" 
+            alt="Modern Architecture" 
+            className="w-full h-full object-cover"
+          />
+          <div className="absolute inset-0 bg-gradient-to-r from-slate-900/95 via-slate-900/80 to-slate-900/40"></div>
+        </div>
+
+        <div className="relative z-10 max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 text-center pt-20">
+          <motion.div
+            initial={{ opacity: 0, y: 30 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.8 }}
+          >
+            <span className="inline-block py-1 px-3 rounded-full bg-orange-500/20 text-orange-400 border border-orange-500/30 text-sm font-semibold mb-6">
+              #1 Real Estate Marketing Agency
+            </span>
+            <h1 className="text-4xl md:text-6xl lg:text-7xl font-bold text-white mb-6 leading-tight">
+              {content.title}
+            </h1>
+            <p className="text-xl text-gray-300 mb-10 max-w-3xl mx-auto leading-relaxed">
+              {content.subtitle}
+            </p>
+            <div className="flex flex-col sm:flex-row justify-center items-center gap-4">
+              <a 
+                href="#contact"
+                className="w-full sm:w-auto px-8 py-4 bg-orange-600 hover:bg-orange-700 text-white rounded-full font-bold text-lg transition-all shadow-lg shadow-orange-600/30 hover:shadow-orange-600/50 transform hover:-translate-y-1"
+              >
+                {content.cta}
+              </a>
+            </div>
+          </motion.div>
+        </div>
+      </section>
+    );
+
+    const Stats = ({ content }) => (
+      <section className="py-16 bg-white relative z-20 -mt-10 mx-4 md:mx-auto max-w-7xl rounded-2xl shadow-xl">
+        <div className="grid grid-cols-2 md:grid-cols-4 gap-8 px-8">
+          {content.map((stat, idx) => (
+            <motion.div 
+              key={idx}
+              initial={{ opacity: 0, scale: 0.9 }}
+              whileInView={{ opacity: 1, scale: 1 }}
+              viewport={{ once: true }}
+              transition={{ delay: idx * 0.1 }}
+              className="text-center"
+            >
+              <div className="text-4xl md:text-5xl font-bold text-slate-900 mb-2">{stat.value}</div>
+              <div className="text-sm md:text-base text-gray-500 font-medium">{stat.label}</div>
+            </motion.div>
+          ))}
+        </div>
+      </section>
+    );
+
+    const Services = ({ content }) => {
+      const serviceIcons = [Icons.Building2, Icons.Store, Icons.Key, Icons.Video, Icons.TrendingUp, Icons.Target];
+      
+      return (
+        <section id="services" className="py-24 bg-slate-50">
+          <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div className="text-center mb-16">
+              <h2 className="text-3xl md:text-4xl font-bold text-slate-900 mb-4">{content.title}</h2>
+              <p className="text-gray-600 max-w-2xl mx-auto text-lg">{content.subtitle}</p>
+            </div>
+
+            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
+              {content.items.map((service, idx) => {
+                const IconComp = serviceIcons[idx];
+                return (
+                  <motion.div
+                    key={idx}
+                    initial={{ opacity: 0, y: 20 }}
+                    whileInView={{ opacity: 1, y: 0 }}
+                    viewport={{ once: true }}
+                    transition={{ delay: idx * 0.1 }}
+                    className="bg-white p-8 rounded-2xl shadow-sm hover:shadow-xl transition-shadow border border-gray-100 group"
+                  >
+                    <div className="w-14 h-14 bg-orange-100 rounded-2xl flex items-center justify-center mb-6 text-orange-600 group-hover:bg-orange-600 group-hover:text-white transition-colors">
+                      <IconComp size={28} />
+                    </div>
+                    <h3 className="text-xl font-bold text-slate-900 mb-3">{service.title}</h3>
+                    <p className="text-gray-600 leading-relaxed">{service.description}</p>
+                  </motion.div>
+                );
+              })}
+            </div>
+          </div>
+        </section>
+      );
+    };
+
+    const Testimonials = ({ content }) => (
+      <section className="py-24 bg-slate-900 text-white overflow-hidden relative">
+        <div className="absolute top-0 right-0 -mt-20 -mr-20 w-80 h-80 bg-orange-600/10 rounded-full blur-3xl"></div>
+        <div className="absolute bottom-0 left-0 -mb-20 -ml-20 w-80 h-80 bg-blue-600/10 rounded-full blur-3xl"></div>
+
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10">
+          <div className="text-center mb-16">
+            <h2 className="text-3xl md:text-4xl font-bold mb-4">{content.title}</h2>
+            <p className="text-gray-400 max-w-2xl mx-auto text-lg">{content.subtitle}</p>
+          </div>
+
+          <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
+            {content.items.map((item, idx) => (
+              <motion.div
+                key={idx}
+                initial={{ opacity: 0, x: 20 }}
+                whileInView={{ opacity: 1, x: 0 }}
+                viewport={{ once: true }}
+                transition={{ delay: idx * 0.2 }}
+                className="bg-white/5 backdrop-blur-sm border border-white/10 p-8 rounded-2xl"
+              >
+                <div className="mb-6 text-orange-500">
+                  {[...Array(5)].map((_, i) => (
+                    <span key={i} className="inline-block mr-1">★</span>
+                  ))}
+                </div>
+                <p className="text-gray-300 italic mb-8 leading-relaxed">"{item.text}"</p>
+                <div className="flex items-center">
+                  <div className="w-12 h-12 bg-orange-600 rounded-full flex items-center justify-center text-white font-bold text-lg">
+                    {item.initials}
+                  </div>
+                  <div className="mx-4">
+                    <h4 className="font-bold text-white">{item.author}</h4>
+                    <p className="text-sm text-gray-500">{item.role}</p>
+                  </div>
+                </div>
+              </motion.div>
+            ))}
+          </div>
+        </div>
+      </section>
+    );
+
+    const CaseStudies = ({ content }) => {
+      const images = [
+        "https://images.unsplash.com/photo-1545324418-cc1a3fa10c00?ixlib=rb-1.2.1&auto=format&fit=crop&w=800&q=80",
+        "https://images.unsplash.com/photo-1512917774080-9991f1c4c750?ixlib=rb-1.2.1&auto=format&fit=crop&w=800&q=80",
+        "https://images.unsplash.com/photo-1555636222-cae831e670b3?ixlib=rb-1.2.1&auto=format&fit=crop&w=800&q=80"
+      ];
+
+      return (
+        <section id="results" className="py-24 bg-white">
+          <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div className="text-center mb-16">
+              <h2 className="text-3xl md:text-4xl font-bold text-slate-900 mb-4">{content.title}</h2>
+              <p className="text-gray-600 max-w-2xl mx-auto text-lg">{content.subtitle}</p>
+            </div>
+
+            <div className="grid grid-cols-1 lg:grid-cols-3 gap-10">
+              {content.items.map((study, idx) => (
+                <motion.div
+                  key={idx}
+                  initial={{ opacity: 0, y: 30 }}
+                  whileInView={{ opacity: 1, y: 0 }}
+                  viewport={{ once: true }}
+                  className="bg-white rounded-2xl overflow-hidden shadow-lg border border-gray-100 group"
+                >
+                  <div className="relative h-48 overflow-hidden">
+                    <img 
+                      src={images[idx]} 
+                      alt={study.title} 
+                      className="w-full h-full object-cover transition-transform duration-500 group-hover:scale-110"
+                    />
+                    <div className="absolute inset-0 bg-gradient-to-t from-black/60 to-transparent"></div>
+                  </div>
+                  <div className="p-8">
+                    <h3 className="text-xl font-bold text-slate-900 mb-2">{study.title}</h3>
+                    <p className="text-gray-600 text-sm mb-6">{study.description}</p>
+                    <div className="grid grid-cols-3 gap-4 border-t pt-6 border-gray-100">
+                      {study.results.map((res, rIdx) => (
+                        <div key={rIdx} className="text-center">
+                          <div className="text-lg font-bold text-orange-600">{res.value}</div>
+                          <div className="text-xs text-gray-500 mt-1">{res.label}</div>
+                        </div>
+                      ))}
+                    </div>
+                  </div>
+                </motion.div>
+              ))}
+            </div>
+          </div>
+        </section>
+      );
+    };
+
+    const FAQ = ({ content }) => {
+      const [activeIndex, setActiveIndex] = useState(null);
+
+      return (
+        <section id="faq" className="py-24 bg-slate-50">
+          <div className="max-w-3xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div className="text-center mb-16">
+              <h2 className="text-3xl md:text-4xl font-bold text-slate-900 mb-4">{content.title}</h2>
+              <p className="text-gray-600">{content.subtitle}</p>
+            </div>
+
+            <div className="space-y-4">
+              {content.items.map((item, idx) => (
+                <div key={idx} className="bg-white rounded-xl shadow-sm overflow-hidden">
+                  <button
+                    onClick={() => setActiveIndex(activeIndex === idx ? null : idx)}
+                    className="w-full px-6 py-5 flex items-center justify-between text-start focus:outline-none"
+                  >
+                    <span className={`font-bold text-lg ${activeIndex === idx ? 'text-orange-600' : 'text-slate-900'}`}>
+                      {item.question}
+                    </span>
+                    <Icons.ChevronDown 
+                      className={`w-5 h-5 text-gray-500 transition-transform duration-300 ${activeIndex === idx ? 'rotate-180' : ''}`} 
+                    />
+                  </button>
+                  <AnimatePresence>
+                    {activeIndex === idx && (
+                      <motion.div
+                        initial={{ height: 0, opacity: 0 }}
+                        animate={{ height: 'auto', opacity: 1 }}
+                        exit={{ height: 0, opacity: 0 }}
+                        className="overflow-hidden"
+                      >
+                        <div className="px-6 pb-6 text-gray-600 leading-relaxed border-t border-gray-100 pt-4">
+                          {item.answer}
+                        </div>
+                      </motion.div>
+                    )}
+                  </AnimatePresence>
+                </div>
+              ))}
+            </div>
+          </div>
+        </section>
+      );
+    };
+
+    const Contact = ({ content }) => {
+      const [status, setStatus] = useState('idle'); // idle, submitting, success, error
+
+      /* 
+        HOW TO CONNECT TO GOOGLE SHEETS:
+        1. Go to https://docs.google.com/spreadsheets/u/0/create to create a new Sheet.
+        2. Go to Extensions > Apps Script.
+        3. Delete any code there and paste the following:
+
+           function doPost(e) {
+             var sheet = SpreadsheetApp.getActiveSpreadsheet().getActiveSheet();
+             var data = JSON.parse(e.postData.contents);
+             sheet.appendRow([new Date(), data.name, data.email, data.phone, data.projectType, data.budget, data.message]);
+             return ContentService.createTextOutput(JSON.stringify({"result":"success"})).setMimeType(ContentService.MimeType.JSON);
+           }
+
+        4. Click "Deploy" > "New deployment".
+        5. Select type: "Web app".
+        6. Description: "Contact Form".
+        7. Execute as: "Me".
+        8. Who has access: "Anyone" (Important!).
+        9. Click "Deploy".
+        10. Copy the "Web app URL" and paste it below into the GOOGLE_SCRIPT_URL variable.
+      */
+      const GOOGLE_SCRIPT_URL = "YOUR_GOOGLE_APPS_SCRIPT_URL_HERE"; 
+
+      const handleSubmit = async (e) => {
+        e.preventDefault();
+        setStatus('submitting');
+        
+        const formData = new FormData(e.target);
+        const data = Object.fromEntries(formData.entries());
+
+        // Simulation if user hasn't replaced the URL yet
+        if (GOOGLE_SCRIPT_URL === "YOUR_GOOGLE_APPS_SCRIPT_URL_HERE") {
+          console.warn("Please configure your Google Apps Script URL in the code.");
+          await new Promise(resolve => setTimeout(resolve, 2000));
+          setStatus('success');
+          e.target.reset();
+          return;
+        }
+
+        try {
+          // Using no-cors mode because Google Apps Script redirects which triggers CORS errors in fetch
+          // However, standard POST with text/plain body usually works best for GAS doPost triggers
+          await fetch(GOOGLE_SCRIPT_URL, {
+            method: "POST",
+            body: JSON.stringify(data),
+            // Don't set Content-Type to application/json to avoid preflight OPTIONS request
+          });
+          
+          setStatus('success');
+          e.target.reset();
+        } catch (error) {
+          console.error('Error:', error);
+          setStatus('error');
+        }
+      };
+
+      return (
+        <section id="contact" className="py-24 bg-slate-900 text-white relative overflow-hidden">
+           <div className="absolute top-0 left-0 w-full h-full overflow-hidden pointer-events-none opacity-20">
+            <div className="absolute top-1/2 left-1/4 w-96 h-96 bg-orange-500 rounded-full mix-blend-screen filter blur-[100px] animate-pulse"></div>
+          </div>
+
+          <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10">
+            <div className="text-center mb-16">
+              <h2 className="text-3xl md:text-4xl font-bold mb-4">{content.title}</h2>
+              <p className="text-gray-400 max-w-2xl mx-auto text-lg">{content.subtitle}</p>
+            </div>
+
+            <div className="bg-white/5 backdrop-blur-md border border-white/10 rounded-2xl p-8 md:p-12 shadow-2xl">
+              {status === 'success' ? (
+                 <motion.div 
+                   initial={{ opacity: 0, scale: 0.9 }}
+                   animate={{ opacity: 1, scale: 1 }}
+                   className="text-center py-12"
+                 >
+                   <div className="w-20 h-20 bg-green-500 rounded-full flex items-center justify-center mx-auto mb-6">
+                     <Icons.CheckCircle size={40} className="text-white" />
+                   </div>
+                   <h3 className="text-2xl font-bold text-white mb-4">{content.success}</h3>
+                   <button 
+                     onClick={() => setStatus('idle')}
+                     className="text-orange-400 hover:text-orange-300 underline"
+                   >
+                     Send another message
+                   </button>
+                 </motion.div>
+              ) : (
+                <form className="space-y-6" onSubmit={handleSubmit}>
+                  <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+                    <div>
+                      <label className="block text-sm font-medium text-gray-400 mb-2">{content.form.name}</label>
+                      <input name="name" type="text" required className="w-full bg-slate-800/50 border border-slate-700 rounded-lg px-4 py-3 text-white focus:outline-none focus:border-orange-500 transition-colors" />
+                    </div>
+                    <div>
+                      <label className="block text-sm font-medium text-gray-400 mb-2">{content.form.email}</label>
+                      <input name="email" type="email" required className="w-full bg-slate-800/50 border border-slate-700 rounded-lg px-4 py-3 text-white focus:outline-none focus:border-orange-500 transition-colors" />
+                    </div>
+                    <div>
+                      <label className="block text-sm font-medium text-gray-400 mb-2">{content.form.phone}</label>
+                      <input name="phone" type="tel" required className="w-full bg-slate-800/50 border border-slate-700 rounded-lg px-4 py-3 text-white focus:outline-none focus:border-orange-500 transition-colors" />
+                    </div>
+                    <div>
+                      <label className="block text-sm font-medium text-gray-400 mb-2">{content.form.projectType}</label>
+                      <select name="projectType" required className="w-full bg-slate-800/50 border border-slate-700 rounded-lg px-4 py-3 text-white focus:outline-none focus:border-orange-500 transition-colors appearance-none">
+                        <option value="">{content.form.placeholders.selectProject}</option>
+                        {Object.entries(content.form.options).map(([key, val]) => (
+                          <option key={key} value={key} className="bg-slate-900">{val}</option>
+                        ))}
+                      </select>
+                    </div>
+                  </div>
+                  
+                  <div>
+                    <label className="block text-sm font-medium text-gray-400 mb-2">{content.form.budget}</label>
+                    <select name="budget" required className="w-full bg-slate-800/50 border border-slate-700 rounded-lg px-4 py-3 text-white focus:outline-none focus:border-orange-500 transition-colors appearance-none">
+                      <option value="">{content.form.placeholders.selectBudget}</option>
+                      <option value="5k-10k" className="bg-slate-900">5,000 - 10,000 DH</option>
+                      <option value="10k-25k" className="bg-slate-900">10,000 - 25,000 DH</option>
+                      <option value="25k-50k" className="bg-slate-900">25,000 - 50,000 DH</option>
+                      <option value="50k+" className="bg-slate-900">+50,000 DH</option>
+                    </select>
+                  </div>
+
+                  <div>
+                    <label className="block text-sm font-medium text-gray-400 mb-2">{content.form.message}</label>
+                    <textarea 
+                      name="message"
+                      rows={4} 
+                      required
+                      className="w-full bg-slate-800/50 border border-slate-700 rounded-lg px-4 py-3 text-white focus:outline-none focus:border-orange-500 transition-colors"
+                      placeholder={content.form.placeholders.message}
+                    ></textarea>
+                  </div>
+
+                  {status === 'error' && (
+                    <div className="p-4 bg-red-500/20 border border-red-500/50 rounded-lg text-red-200 text-sm">
+                      {content.error}
+                    </div>
+                  )}
+
+                  <button 
+                    type="submit" 
+                    disabled={status === 'submitting'}
+                    className={`w-full bg-orange-600 hover:bg-orange-700 text-white font-bold py-4 rounded-lg transition-all transform shadow-lg shadow-orange-600/30 ${status === 'submitting' ? 'opacity-75 cursor-not-allowed' : 'hover:-translate-y-1'}`}
+                  >
+                    {status === 'submitting' ? content.form.submitting : content.form.submit}
+                  </button>
+                </form>
+              )}
+            </div>
+          </div>
+        </section>
+      );
+    };
+
+    const Footer = ({ content }) => (
+      <footer className="bg-black text-white py-12 border-t border-slate-800">
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+          <div className="flex flex-col md:flex-row justify-between items-center">
+            <div className="mb-8 md:mb-0 text-center md:text-start">
+              <div className="text-2xl font-bold mb-2">Impact<span className="text-orange-500">Agency</span></div>
+              <p className="text-gray-400 text-sm max-w-xs">{content.description}</p>
+            </div>
+            
+            <div className="flex space-x-6 rtl:space-x-reverse mb-8 md:mb-0">
+              <a href="#" className="text-gray-400 hover:text-white transition-colors"><Icons.Facebook size={20} /></a>
+              <a href="#" className="text-gray-400 hover:text-white transition-colors"><Icons.Instagram size={20} /></a>
+              <a href="#" className="text-gray-400 hover:text-white transition-colors"><Icons.Linkedin size={20} /></a>
+              <a href="#" className="text-gray-400 hover:text-white transition-colors"><Icons.Twitter size={20} /></a>
+            </div>
+          </div>
+          <div className="border-t border-slate-900 mt-8 pt-8 text-center text-sm text-gray-500">
+            {content.rights}
+          </div>
+        </div>
+      </footer>
+    );
+
+    // --- Main App ---
+    const App = () => {
+      const [lang, setLang] = useState('ar');
+
+      useEffect(() => {
+        document.documentElement.lang = lang;
+        document.documentElement.dir = lang === 'ar' ? 'rtl' : 'ltr';
+      }, [lang]);
+
+      const content = TRANSLATIONS[lang];
+
+      return (
+        <div className={`min-h-screen ${lang === 'ar' ? 'font-tajawal' : 'font-inter'} bg-slate-50 text-slate-900 overflow-x-hidden`}>
+          <Navbar lang={lang} setLang={setLang} content={content.nav} />
+          <main>
+            <Hero content={content.hero} lang={lang} />
+            <Stats content={content.stats} />
+            <Services content={content.services} />
+            <CaseStudies content={content.caseStudies} />
+            <Testimonials content={content.testimonials} />
+            <FAQ content={content.faq} />
+            <Contact content={content.contact} />
+          </main>
+          <Footer content={content.footer} />
+        </div>
+      );
+    }
+
+    const root = ReactDOM.createRoot(document.getElementById('root'));
+    root.render(
+      <React.StrictMode>
+        <App />
+      </React.StrictMode>
+    );
+  </script>
+</body>
+</html>
